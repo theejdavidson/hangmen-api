@@ -7,8 +7,11 @@ module ApplicationCable
     end
 
     private
+
     def find_verified_user
-      if verified_user = User.find_by(id: cookies.encrypted[:user_id])
+      token = request.original_fullpath.split('=').last
+      decoded_token = JWT.decode(token, 'f00_b@r', true)
+      if verified_user = User.find_by(id: decoded_token.first["user_id"])
         verified_user
       else
         reject_unauthorized_connection
