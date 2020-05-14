@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       resources :games, only: [:create]
       post '/login', to: 'auth#create'
       get '/profile', to: 'users#profile'
-      get '/join', to: 'games#join'
+      post '/join', to: 'games#join'
     end
   end
   mount ActionCable.server => '/cable'

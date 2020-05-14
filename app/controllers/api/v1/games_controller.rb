@@ -1,9 +1,6 @@
 class Api::V1::GamesController < ApplicationController
-    # skip_before_action :authorized, only: [:create, :join]
 
     def create
-        # @game = Game.new(game_params)
-        # byebug
         @game = Game.create(key: params[:game][:key])
         @game_user = GameUser.create(game_id: @game.id, user_id: params[:game][:users][:id])
 
@@ -16,7 +13,9 @@ class Api::V1::GamesController < ApplicationController
 
     def join
         @game = Game.find_by(key: params[:key])
+        byebug
         if @game
+            byebug
             @game_user = GameUser.create(game_id: @game.id, user_id: params[:game][:users][:id])
             broadcast_game
         else
@@ -25,10 +24,6 @@ class Api::V1::GamesController < ApplicationController
     end
 
     private
-
-    # def game_params
-    #     params.require(:game).permit(:key, :users)
-    # end
 
     def broadcast_game
         serialized_game_data = ActiveModelSerializers::Adapter::Json.new(
