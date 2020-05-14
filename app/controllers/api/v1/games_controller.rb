@@ -13,10 +13,8 @@ class Api::V1::GamesController < ApplicationController
 
     def join
         @game = Game.find_by(key: params[:key])
-        byebug
         if @game
-            byebug
-            @game_user = GameUser.create(game_id: @game.id, user_id: params[:game][:users][:id])
+            @game_user = GameUser.create(game_id: @game.id, user_id: params[:user][:id])
             broadcast_game
         else
             render json: { error: 'could not find game with that key'}, status: :not_acceptable
@@ -28,7 +26,7 @@ class Api::V1::GamesController < ApplicationController
     def broadcast_game
         serialized_game_data = ActiveModelSerializers::Adapter::Json.new(
         GameSerializer.new(@game)).serializable_hash
-        ActionCable.server.broadcast 'games_channel', serialized_game_data
-        head :ok
+        ActionCable.server.broadcast 'GamesChannel', serialized_game_data
+        render json: serialized_game_data
     end
 end
