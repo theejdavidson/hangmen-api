@@ -24,12 +24,10 @@ class Api::V1::GamesController < ApplicationController
     def add_guess_word
         @game = Game.find_by(key: params[:invite_key])
         if @game
-            @game_user = GameUser.find_by(user_id: params[:user_id])
+            @game_user = GameUser.find_by(user_id: params[:user_id], game_id: @game.id)
             if @game_user
-                # byebug
                 @game_user.update(guess_word: params[:guess_word])
                 @game_user.save
-                byebug
                 broadcast_game
             else
                 render json: { error: 'could not find game user'}, status: :not_acceptable
@@ -45,7 +43,6 @@ class Api::V1::GamesController < ApplicationController
         serialized_game_data = ActiveModelSerializers::Adapter::Json.new(
         GameSerializer.new(@game)).serializable_hash
         GamesChannel.broadcast_to(@game, serialized_game_data)
-        # render json: serialized_game_data
         head :ok
     end
 end
