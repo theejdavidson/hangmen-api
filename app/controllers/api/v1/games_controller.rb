@@ -22,6 +22,7 @@ class Api::V1::GamesController < ApplicationController
     end
 
     def add_guess_word
+        # byebug
         @game = Game.find_by(key: params[:invite_key])
         if @game
             @game_user = GameUser.find_by(user_id: params[:user_id], game_id: @game.id)
@@ -41,8 +42,13 @@ class Api::V1::GamesController < ApplicationController
 
     def broadcast_game
         serialized_game_data = ActiveModelSerializers::Adapter::Json.new(
-        GameSerializer.new(@game)).serializable_hash
+            GameSerializer.new(@game)
+        ).serializable_hash
+
+        Rails.logger.info "Ruby broadcasting -> #{serialized_game_data}"
+
         GamesChannel.broadcast_to(@game, serialized_game_data)
         head :ok
+
     end
 end
