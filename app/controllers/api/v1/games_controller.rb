@@ -14,7 +14,7 @@ class Api::V1::GamesController < ApplicationController
     def join
         @game = Game.find_by(key: params[:inviteKey])
         if @game
-            @game_user = GameUser.create(game_id: @game.id, user_id: params[:user][:id])
+            @game_user = GameUser.find_or_create_by(game_id: @game.id, user_id: params[:user][:id])
             broadcast_game
         else
             render json: { error: 'could not find game with that key'}, status: :not_acceptable
