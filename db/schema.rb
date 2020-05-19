@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 2020_05_13_161908) do
   create_table "game_users", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "game_id", null: false
-    t.string "guess_word", default: ""
-    t.integer "limbs", default: 0
+    t.string "guess_word", default: "", null: false
+    t.integer "limbs", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["game_id"], name: "index_game_users_on_game_id"
