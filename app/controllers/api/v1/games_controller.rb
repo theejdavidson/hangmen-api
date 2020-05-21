@@ -21,6 +21,20 @@ class Api::V1::GamesController < ApplicationController
         end
     end
 
+    #requires params gameUserId
+    def increment_limb
+        @game_user = GameUser.find(params[:gameUserId])
+        if @game_user
+            @game = Game.find(@game_user.game_id)
+            if @game_user.limbs <= 6
+                @game_user.increment!(:limbs, 1)
+                broadcast_game
+            end
+        else
+            render json: { error: 'could not find game user with that id'}, status: :not_acceptable
+        end
+    end
+
     # def add_guess_word
     #     # byebug
     #     @game = Game.find_by(key: params[:invite_key])
