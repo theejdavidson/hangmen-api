@@ -26,7 +26,7 @@ class Api::V1::GamesController < ApplicationController
         @game_user = GameUser.find(params[:gameUserId])
         if @game_user
             @game = Game.find(@game_user.game_id)
-            if @game_user.limbs <= 6
+            if @game_user.limbs < 6
                 @game_user.increment!(:limbs, 1)
                 broadcast_game
             end
@@ -39,7 +39,7 @@ class Api::V1::GamesController < ApplicationController
     #     # byebug
     #     @game = Game.find_by(key: params[:invite_key])
     #     if @game
-    #         @game_user = GameUser.find_by(user_id: params[:user_id], game_id: @game.id)
+    #         @game_user = GmeUser.find_by(user_id: params[:user_id], game_id: @game.id)
     #         if @game_user
     #             @game_user.update(guess_word: params[:guess_word])
     #             @game_user.save
