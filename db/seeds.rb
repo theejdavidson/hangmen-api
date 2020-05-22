@@ -17,6 +17,10 @@ bobGame1 = GameUser.create(game_id: testGame1.id, user_id: bob.id, guess_word: '
 aliceGame1 = GameUser.create(game_id: testGame1.id, user_id: alice.id, guess_word: 'pizza')
 samGame1 = GameUser.create(game_id: testGame1.id, user_id: sam.id, guess_word: 'burger')
 
-puts "GAMEUSER CREATED: #{bobGame1.guess_word}"
+puts "GAMEUSER bob CREATED: #{bobGame1.id}"
+puts "GAMEUSER alice CREATED: #{aliceGame1.id}"
+
+
+bobGuess1 = GameGuess.create!(guess_letter: 'f', guesser_game_user_id: bobGame1.id, target_game_user_id: aliceGame1.id)
 
 # bobGame1.map_guess_word

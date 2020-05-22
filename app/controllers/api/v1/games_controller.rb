@@ -23,7 +23,8 @@ class Api::V1::GamesController < ApplicationController
 
     #requires params gameUserId
     def increment_limb
-        @game_user = GameUser.find(params[:currentGameUserId])
+        @game_user = GameUser.find(params[:
+            ])
         if @game_user
             @game = Game.find(@game_user.game_id)
             if @game_user.limbs < 6

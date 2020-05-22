@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_13_161908) do
+ActiveRecord::Schema.define(version: 2020_05_22_174720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "game_guesses", force: :cascade do |t|
+    t.string "guess_letter"
+    t.bigint "guesser_game_user_id", null: false
+    t.bigint "target_game_user_id", null: false
+    t.index ["guesser_game_user_id"], name: "index_game_guesses_on_guesser_game_user_id"
+    t.index ["target_game_user_id"], name: "index_game_guesses_on_target_game_user_id"
+  end
 
   create_table "game_users", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -39,6 +47,8 @@ ActiveRecord::Schema.define(version: 2020_05_13_161908) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "game_guesses", "game_users", column: "guesser_game_user_id"
+  add_foreign_key "game_guesses", "game_users", column: "target_game_user_id"
   add_foreign_key "game_users", "games"
   add_foreign_key "game_users", "users"
 end
