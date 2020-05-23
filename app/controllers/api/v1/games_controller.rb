@@ -21,10 +21,19 @@ class Api::V1::GamesController < ApplicationController
         end
     end
 
+    #params: guessLetter, guesserGameUserId, targetGameUserId
+    # def guess
+    #     @guess = GameGuess.create(guess_letter: params[:guessLetter], guesser_game_user_id: params[:guesserGameUserId], target_game_user_id: params[:targetGameUserId])
+    #     @guesser_game_user = GameUser.find(params[:guesserGameUserId])
+    #     @target_game_user = GameUser.find(params[:targetGameUserId])
+
+    #     @game = Game.find(@guesser_game_user.game_id)
+    #     broadcast_game
+    # end
+
     #requires params gameUserId
     def increment_limb
-        @game_user = GameUser.find(params[:
-            ])
+        @game_user = GameUser.find(params[:currentGameUserId])
         if @game_user
             @game = Game.find(@game_user.game_id)
             if @game_user.limbs < 6
