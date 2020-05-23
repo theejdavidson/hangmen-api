@@ -1,4 +1,5 @@
 class Api::V1::GamesController < ApplicationController
+    skip_before_action :authorized, only: [:create]
 
     def create
         @game = Game.create(key: params[:inviteKey])

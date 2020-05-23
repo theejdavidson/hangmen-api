@@ -21,6 +21,6 @@ puts "GAMEUSER bob CREATED: #{bobGame1.id}"
 puts "GAMEUSER alice CREATED: #{aliceGame1.id}"
 
 
-bobGuess1 = GameGuess.create!(guess_letter: 'f', guesser_game_user_id: bobGame1.id, target_game_user_id: aliceGame1.id)
+bobGuess1 = GameGuess.create!(guess_letter: 'f', guesser_game_user_id: bobGame1.id, target_game_user_id: aliceGame1.id, game_id: 1)
 
 # bobGame1.map_guess_word
