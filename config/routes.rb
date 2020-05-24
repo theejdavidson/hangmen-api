@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       post '/login', to: 'auth#create'
       get '/profile', to: 'users#profile'
       post '/join', to: 'games#join'
-      patch '/increment-limb', to: 'games#increment_limb'
+      post '/guess', to: 'games#guess'
     end
   end
   mount ActionCable.server => '/cable'
