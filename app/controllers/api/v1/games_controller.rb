@@ -1,5 +1,5 @@
 class Api::V1::GamesController < ApplicationController
-    skip_before_action :authorized, only: [:create]
+    skip_before_action :authorized#, only: [:create, :join, :guess, :start]
 
     def create
         @game = Game.create(key: params[:inviteKey])
@@ -22,46 +22,24 @@ class Api::V1::GamesController < ApplicationController
         end
     end
 
-    #params: guessLetter, guesserGameUserId, targetGameUserId
-    def guess
-        @guess = GameGuess.create(guess_letter: params[:guessLetter], guesser_game_user_id: params[:guesserGameUserId], target_game_user_id: params[:targetGameUserId], game_id: params[:gameId])
-        # @guesser_game_user = GameUser.find(params[:guesserGameUserId])
-        # @target_game_user = GameUser.find(params[:targetGameUserId])
+    def start
         @game = Game.find(params[:gameId])
-
+        @game.update(status: 'IN_PROGRESS')
+        @game.save
         broadcast_game
     end
 
-    #requires params gameUserId
-    def increment_limb
-        @game_user = GameUser.find(params[:currentGameUserId])
-        if @game_user
-            @game = Game.find(@game_user.game_id)
-            if @game_user.limbs < 6
-                @game_user.increment!(:limbs, 1)
-                broadcast_game
-            end
-        else
-            render json: { error: 'could not find game user with that id'}, status: :not_acceptable
-        end
-    end
+    def guess
+        @guess = GameGuess.create(guess_letter: params[:guessLetter], guesser_game_user_id: params[:guesserGameUserId], target_game_user_id: params[:targetGameUserId], game_id: params[:gameId])
+        @guesser_game_user = GameUser.find(params[:guesserGameUserId])
+        @target_game_user = GameUser.find(params[:targetGameUserId])
+        @game = Game.find(params[:gameId])
 
-    # def add_guess_word
-    #     # byebug
-    #     @game = Game.find_by(key: params[:invite_key])
-    #     if @game
-    #         @game_user = GmeUser.find_by(user_id: params[:user_id], game_id: @game.id)
-    #         if @game_user
-    #             @game_user.update(guess_word: params[:guess_word])
-    #             @game_user.save
-    #             broadcast_game
-    #         else
-    #             render json: { error: 'could not find game user'}, status: :not_acceptable
-    #         end
-    #     else
-    #         render json: { error: 'could not find game with that key'}, status: :not_acceptable
-    #     end
-    # end
+        if !@target_game_user.guess_word.include?(@guess.guess_letter) && @guesser_game_user.limbs < 6
+            @guesser_game_user.increment!(:limbs, 1)
+        end
+        broadcast_game
+    end
 
     private
 

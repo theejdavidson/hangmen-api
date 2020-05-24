@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       get '/profile', to: 'users#profile'
       post '/join', to: 'games#join'
       post '/guess', to: 'games#guess'
+      post '/start', to: 'games#start'
     end
   end
   mount ActionCable.server => '/cable'
