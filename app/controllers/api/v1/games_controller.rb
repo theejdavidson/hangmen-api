@@ -50,6 +50,12 @@ class Api::V1::GamesController < ApplicationController
                 @guesser_game_user.increment!(:limbs, 1)
             end
         end
+        remaining_users = @game.game_users.filter{ |user| user.limbs != 6}
+        if remaining_users.length == 1
+            @game.update(status: 'FINISHED')
+            @game.save
+        end
+        # byebug
         broadcast_game
     end
 
