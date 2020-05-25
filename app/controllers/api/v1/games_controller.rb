@@ -34,13 +34,21 @@ class Api::V1::GamesController < ApplicationController
     end
 
     def guess
-        @guess = GameGuess.create(guess_letter: params[:guessLetter], guesser_game_user_id: params[:guesserGameUserId], target_game_user_id: params[:targetGameUserId], game_id: params[:gameId])
         @guesser_game_user = GameUser.find(params[:guesserGameUserId])
         @target_game_user = GameUser.find(params[:targetGameUserId])
         @game = Game.find(params[:gameId])
-
-        if !@target_game_user.guess_word.include?(@guess.guess_letter) && @guesser_game_user.limbs < 6
-            @guesser_game_user.increment!(:limbs, 1)
+        if @guesser_game_user.limbs < 6
+            @guess = GameGuess.create(guess_letter: params[:guessLetter], guesser_game_user_id: params[:guesserGameUserId], target_game_user_id: params[:targetGameUserId], game_id: params[:gameId])
+            target_total_guesses = @game.game_guesses.filter{|guess| guess.target_game_user_id == @target_game_user.id}.map{|guess| guess.guess_letter}
+            target_guess_word_arr = @target_game_user.guess_word.split('')
+            remaining_target_letters = target_guess_word_arr.filter{|letter| !target_total_guesses.include?(letter)}
+            if remaining_target_letters.length == 0
+                @target_game_user.limbs = 6
+                @target_game_user.save 
+            end
+            if !@target_game_user.guess_word.include?(@guess.guess_letter)
+                @guesser_game_user.increment!(:limbs, 1)
+            end
         end
         broadcast_game
     end
