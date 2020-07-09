@@ -1,24 +1,3 @@
-# README
+# Hangmen Rails API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+This repo holds the backend server for the Hangmen game, as well as much of the logic for the game itself. The games get created via RESTFul protocols and users can join a game via a websocket connection.
